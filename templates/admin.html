@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page - CCA Schedule</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Admin Page</h1>
+            <a href="{{ url_for('home') }}">Home</a>
+        </div>
+    </header>
+    <div class="container">
+        <h2>Manage CCA Schedule</h2>
+        <form action="{{ url_for('admin') }}" method="POST">
+            <input type="hidden" id="edit_date" name="edit_date">
+            <label for="date">Date (YYYY-MM-DD):</label>
+            <input type="date" id="date" name="date" required>
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" name="subject" required>
+            <label for="start_time">Start Time:</label>
+            <input type="time" id="start_time" name="start_time" required>
+            <label for="end_time">End Time:</label>
+            <input type="time" id="end_time" name="end_time" required>
+            <label for="is_cca">CCA Day:</label>
+            <input type="checkbox" id="is_cca" name="is_cca">
+            <button type="submit">Add/Update</button>
+        </form>
+        <h3>Current Schedule</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Subject</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>CCA Day</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for date, info in cca_schedule.items() %}
+                <tr>
+                    <td>{{ date }}</td>
+                    <td>{{ info.subject }}</td>
+                    <td>{{ info.start_time }}</td>
+                    <td>{{ info.end_time }}</td>
+                    <td>{{ 'Yes' if info.is_cca else 'No' }}</td>
+                    <td>
+                        <button type="button" onclick="editEntry('{{ date }}', '{{ info.subject }}', '{{ info.start_time }}', '{{ info.end_time }}', {{ 'true' if info.is_cca else 'false' }})">Edit</button>
+                        <form action="{{ url_for('delete', date=date) }}" method="POST" style="display:inline;">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        function editEntry(date, subject, startTime, endTime, isCca) {
+            document.getElementById('edit_date').value = date;
+            document.getElementById('date').value = date;
+            document.getElementById('subject').value = subject;
+            document.getElementById('start_time').value = startTime;
+            document.getElementById('end_time').value = endTime;
+            document.getElementById('is_cca').checked = isCca;
+        }
+    </script>
+</body>
+</html>
