@@ -48,7 +48,7 @@ def requires_auth(f):
     return decorated
 
 
-@app.route('/')
+@app.route('/home')
 def home():
     current_date = datetime.now().strftime('%Y-%m-%d')
     cca_schedule = load_schedule()
